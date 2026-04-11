@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import LeftControl from './components/LeftControl';
 import RightControl from './components/RightControl';
-import Screen from './components/Screen';
+import Screen from './components/screen';
 import useFetch from './hooks/useFetch';
 import GameScreen from './components/GameScreen';
+import StatWindow from './components/StatWindow';
 
 function App() {
   const url = 'https://pokeapi.co/api/v2/pokemon?limit=100&offset=0';
@@ -20,9 +21,24 @@ function App() {
   const getListPokemones = () => {
     const list = data?.results?.filter((p) => p.url);
     const plist = list?.map((l) => fetch(l.url).then((res) => res.json()));
+
     Promise.all(plist).then((values) => {
-      console.log('promesa values', values);
-      setPokemones(values);
+      const saniData = values?.map((e) => {
+        return {
+          name: e.name,
+          id: e.id,
+          types: e.types,
+          moves: e.moves.map((e) => {
+            return {
+              ...e,
+              attack: getRandomInt(20, 98),
+            };
+          }),
+          sprites: e.sprites,
+        };
+      });
+
+      setPokemones(saniData);
     });
   };
 
@@ -38,31 +54,18 @@ function App() {
 
   const handleDirection = (direction) => {
     console.log({direction})
-    if (direction === 'right'){
-      if (prev+1 > 100){
-        setPosition(100)
-      }else{
-      setPosition((prev) => prev+1);
-      }
-    }else if (direction === 'left'){
-      if (prev-1 <= 0 ){
-        setPosition(1)
-      }else{
-        setPosition((prev) => prev-1)
-      } 
-    } else if(direction === 'up'){
-      if (prev-4 <= 0 ){
-        setPosition(1)
-      }else{
-        setPosition((prev) => prev-4)
-      } 
-    }else if (direction === "down"){
-      if (prev+4 > 100){
-        setPosition(100)
-      }else{
-      setPosition((prev) => prev+4)
-      }
-    }
+    if (direction === 'right') {
+    setPosition((prev) => (prev + 1 > 100 ? 100 : prev + 1));
+
+  } else if (direction === 'left') {
+    setPosition((prev) => (prev - 1 <= 0 ? 1 : prev - 1));
+
+  } else if (direction === 'up') {
+    setPosition((prev) => (prev - 4 <= 0 ? 1 : prev - 4));
+
+  } else if (direction === 'down') {
+    setPosition((prev) => (prev + 4 > 100 ? 100 : prev + 4));
+  }
   }
 
 
@@ -87,6 +90,7 @@ function App() {
         <Screen pokemones={pokemones} position={position}/>
       )}
       <RightControl handleSelection={handleSelection}/>
+      <StatWindow pokemones={pokemones} position={position}/>
     </div>
   );
 }
