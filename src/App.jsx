@@ -6,6 +6,7 @@ import Screen from './components/screen';
 import useFetch from './hooks/useFetch';
 import GameScreen from './components/GameScreen';
 import StatWindow from './components/StatWindow';
+import ResultScreen from './components/ResultScreen';
 
 function App() {
   const url = 'https://pokeapi.co/api/v2/pokemon?limit=100&offset=0';
@@ -81,18 +82,28 @@ function App() {
     computerSelection()
   }
 
+  const [result, setResult] = useState(null)
+
   return (
     <div className="flex justify-center pt-10">
       <LeftControl handleDirection={handleDirection}/>
-      {myPokeSelection.length && pcPokeSelection.length ? (
-        <GameScreen myPokeSelection={myPokeSelection} pcPokeSelection={pcPokeSelection}/>
+      {result ? (
+      <ResultScreen result={result} />
+      ) : myPokeSelection.length && pcPokeSelection.length ? (
+      <GameScreen 
+      myPokeSelection={myPokeSelection} 
+      pcPokeSelection={pcPokeSelection}
+      setResult={setResult}
+    />
       ) : (
         <Screen pokemones={pokemones} position={position}/>
       )}
       <RightControl handleSelection={handleSelection}/>
+      {myPokeSelection.length >=1 ? (<div></div>) : (
       <StatWindow pokemones={pokemones} position={position}/>
+      )}
     </div>
   );
 }
 
-export default App;
+export default App

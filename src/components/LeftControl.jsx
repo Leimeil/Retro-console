@@ -2,19 +2,34 @@ import React from 'react'
 
 function LeftControl({ handleDirection }) {
   return (
-    <div className='w-30 h-[200px] border-4 border-solid flex flex-col gap-2 p-2'>
+    <div className='w-32 h-63 border-4 rounded-xl grid grid-cols-3 grid-rows-3 place-items-center'>
+      
+      <div></div>
       <button 
-      onClick={() => handleDirection('up')}
-      >^</button>
-      <button
+        onClick={() => handleDirection('up')}
+        className='bg-gray-300 w-10 h-10'
+      >↑</button>
+      <div></div>
+
+      <button 
         onClick={() => handleDirection('left')}
-      >left</button>
+        className='bg-gray-300 w-10 h-10'
+      >←</button>
+
+      <div className='w-6 h-6 bg-gray-500 rounded'></div>
+
       <button 
-        onClick={() =>handleDirection('down')}
-      >v</button>
-      <button
         onClick={() => handleDirection('right')}
-      >right</button>
+        className='bg-gray-300 w-10 h-10'
+      >→</button>
+
+      <div></div>
+      <button 
+        onClick={() => handleDirection('down')}
+        className='bg-gray-300 w-10 h-10'
+      >↓</button>
+      <div></div>
+
     </div>
   )
 }
